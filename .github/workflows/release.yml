@@ -18,6 +18,10 @@ jobs:
       - name: Build
         run: dotnet publish --configuration Release --output out
 
+      - name: Archive
+        run: |
+          Compress-Archive "out/*" LockMicrosoftPinyin.zip
+
       - name: Tag
         run: |
           echo "release_tag=$(date '+%Y-%m-%d')" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
@@ -26,4 +30,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.release_tag }}
-          files: "out/*"
+          files: LockMicrosoftPinyin.zip
