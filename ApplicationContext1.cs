@@ -42,7 +42,7 @@ public class ApplicationContext1 : ApplicationContext
     timer.Start();
   }
 
-  private void LockIME(object? sender, EventArgs e)
+  private void LockIME(object sender, EventArgs e)
   {
     var hWnd = GetForegroundWindow();
     if (hWnd == IntPtr.Zero) return;
@@ -67,7 +67,7 @@ public class ApplicationContext1 : ApplicationContext
     SendMessage(hWnd, WM_IME_CONTROL, IMC_SETCONVERSIONMODE, IME_CHINESE);
   }
 
-  private void OnExit(object? sender, EventArgs e)
+  private void OnExit(object sender, EventArgs e)
   {
     timer.Stop();
     notifyIcon.Dispose();

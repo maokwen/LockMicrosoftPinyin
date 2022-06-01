@@ -25,8 +25,13 @@ DetectHiddenWindows True
 outer:
 Loop {
   try {
+
+    ; sleep(500)
+
     hWnd := WinGetID("A")
     id := DllCall("imm32\ImmGetDefaultIMEWnd", "Uint", hWnd, "Uint")
+
+    ; MsgBox(id)
 
     if (InChs()) {
       SwitchImeState(id)
