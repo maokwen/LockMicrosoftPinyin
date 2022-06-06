@@ -28,6 +28,13 @@ public class ApplicationContext1 : ApplicationContext
   {
     contextMenu = new ContextMenuStrip();
     contextMenu.ShowImageMargin = false;
+    contextMenu.ShowCheckMargin = true;
+
+    var enable = new ToolStripMenuItem("Enable", null, OnCheck);
+    enable.Checked = true;
+    enable.CheckOnClick = true;
+    contextMenu.Items.Add(enable);
+
     contextMenu.Items.Add(new ToolStripMenuItem("Exit", null, OnExit));
 
     notifyIcon = new NotifyIcon();
@@ -44,15 +51,19 @@ public class ApplicationContext1 : ApplicationContext
 
   private void LockIME(object sender, EventArgs e)
   {
-    var hWnd = GetForegroundWindow();
-    if (hWnd == IntPtr.Zero) return;
-    var id = ImmGetDefaultIMEWnd(hWnd);
-    if (id == IntPtr.Zero) return;
-
-    if (InChsStatus())
+    try
     {
-      SetChsStatus(id);
+      var hWnd = GetForegroundWindow();
+      if (hWnd == IntPtr.Zero) return;
+      var id = ImmGetDefaultIMEWnd(hWnd);
+      if (id == IntPtr.Zero) return;
+
+      if (InChsStatus())
+      {
+        SetChsStatus(id);
+      }
     }
+    catch { }
   }
 
   private bool InChsStatus()
@@ -72,5 +83,17 @@ public class ApplicationContext1 : ApplicationContext
     timer.Stop();
     notifyIcon.Dispose();
     Application.Exit();
+  }
+
+  private void OnCheck(object sender, EventArgs e)
+  {
+    if ((sender as ToolStripMenuItem).Checked)
+    {
+      timer.Start();
+    }
+    else
+    {
+      timer.Stop();
+    }
   }
 }
