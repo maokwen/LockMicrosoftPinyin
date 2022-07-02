@@ -3,11 +3,26 @@ using System;
 using System.Windows.Forms;
 using System.Reflection;
 
+public class BetterTimer : System.Windows.Forms.Timer
+{
+  public BetterTimer() : base()
+  { base.Enabled = true; }
+
+  public BetterTimer(System.ComponentModel.IContainer container) : base(container)
+  { base.Enabled = true; }
+
+  public override bool Enabled
+  { get; set; }
+
+  protected override void OnTick(System.EventArgs e)
+  { if (this.Enabled) base.OnTick(e); }
+}
+
 public class ApplicationContext1 : ApplicationContext
 {
   private readonly NotifyIcon notifyIcon;
   private readonly ContextMenuStrip contextMenu;
-  private readonly System.Windows.Forms.Timer timer;
+  private readonly BetterTimer timer;
   private readonly uint WM_IME_CONTROL = 0x283;
   private readonly IntPtr IMC_SETCONVERSIONMODE = new IntPtr(0x002);
   private readonly IntPtr IME_CHINESE = new IntPtr(0x401);
@@ -42,10 +57,9 @@ public class ApplicationContext1 : ApplicationContext
     notifyIcon.ContextMenuStrip = contextMenu;
     notifyIcon.Visible = true;
 
-    timer = new System.Windows.Forms.Timer();
+    timer = new BetterTimer();
     timer.Tick += LockIME;
     timer.Interval = 500;
-    timer.Enabled = true;
     timer.Start();
   }
 
