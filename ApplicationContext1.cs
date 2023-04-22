@@ -7,7 +7,7 @@ public class ApplicationContext1 : ApplicationContext
 {
   private readonly NotifyIcon notifyIcon;
   private readonly ContextMenuStrip contextMenu;
-  private readonly System.Timers.Timer timer;
+  private readonly System.Threading.Timer timer;
   private readonly uint WM_IME_CONTROL = 0x283;
   private readonly IntPtr IMC_SETCONVERSIONMODE = new IntPtr(0x002);
   private readonly IntPtr IME_CHINESE = new IntPtr(0x401);
@@ -42,14 +42,12 @@ public class ApplicationContext1 : ApplicationContext
     notifyIcon.ContextMenuStrip = contextMenu;
     notifyIcon.Visible = true;
 
-    timer = new System.Timers.Timer();
-    timer.Elapsed += LockIME;
-    timer.AutoReset = true;
-    timer.Interval = 500;
-    timer.Start();
+    var tsInterval = new TimeSpan(0, 0, 1);
+    timer = new System.Threading.Timer(
+      new System.Threading.TimerCallback(LockIME), null, tsInterval, tsInterval);
   }
 
-  private void LockIME(object sender, EventArgs e)
+  private void LockIME(object state)
   {
     try
     {
@@ -80,8 +78,9 @@ public class ApplicationContext1 : ApplicationContext
 
   private void OnExit(object sender, EventArgs e)
   {
-    timer.Stop();
+    timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
     timer.Dispose();
+
     notifyIcon.Dispose();
     Application.Exit();
   }
@@ -90,11 +89,11 @@ public class ApplicationContext1 : ApplicationContext
   {
     if ((sender as ToolStripMenuItem).Checked)
     {
-      timer.Start();
+      timer.Change(1, 1); ;
     }
     else
     {
-      timer.Stop();
+      timer.Change(Timeout.Infinite, Timeout.Infinite); ;
     }
   }
 }
