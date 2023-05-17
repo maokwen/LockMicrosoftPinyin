@@ -1,0 +1,9 @@
+
+<!-- see: https://github.com/winsw/winsw -->
+<service>
+  <id>LockMicrosoftPinyin</id>
+  <name>LockMicrosoftPinyin</name>
+  <description>将微软拼音锁定为中文模式</description>
+  <executable>%BASE%\LockMicrosoftPinyin.exe</executable>
+  <interactice/>
+</service>

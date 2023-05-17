@@ -17,6 +17,19 @@ jobs:
 
       - name: Build
         run: dotnet publish --configuration Release --output out
+      
+      - name: Download WinSW
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "winsw/winsw"
+          latest: true
+          fileName: "WinSW-x64.exe"
+          out-file-path: "out"
+      
+      - name: Setup WinSW
+        run: |
+          Rename-Item -Path "out/WinSW-x64.exe" -NewName "InstallSevice.exe"
+          Move-Item -Path "WinSW.xml" -Destination "out/InstallSevice.xml"
 
       - name: Archive
         run: |
